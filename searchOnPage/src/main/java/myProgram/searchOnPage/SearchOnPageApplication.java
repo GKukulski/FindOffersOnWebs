@@ -8,6 +8,6 @@ public class SearchOnPageApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(SearchOnPageApplication.class, args);
-	}
+	} 
 
 }

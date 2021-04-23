@@ -4,16 +4,25 @@ public class Offer {
 	private String title;
 	private int price;
 	private int length;
+	private String link;
 	
 	
-	public Offer(String title, int price, int length) {
+	public Offer(String title, int price, int length, String link) {
 		this.title = title;
 		this.price = price;
 		this.length = length;
+		this.link = link;
 	}
 	//geters and Settter
+	
 	public String getTitle() {
 		return title;
+	}
+	public String getLink() {
+		return link;
+	}
+	public void setLink(String link) {
+		this.link = link;
 	}
 	public void setTitle(String title) {
 		this.title = title;

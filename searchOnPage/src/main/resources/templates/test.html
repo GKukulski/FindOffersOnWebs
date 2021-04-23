@@ -24,7 +24,7 @@
                 </thead>
                 <tbody>
                     <tr th:each="offer: ${web}">
-                        <td><span th:text="${offer.title}"> </span></td>
+                        <td><a th:href="@{${offer.link}}"><span th:text="${offer.title}"> </span></a></td>
                         <td><span th:text="${offer.length}"> </span></td>
                         <td><span th:text="${offer.price}"> </span></td>
                     </tr>

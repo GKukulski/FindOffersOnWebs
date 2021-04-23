@@ -20,11 +20,18 @@ import myProgram.searchOnPage.entity.Offer;
 
 public class ReadURL implements Find {
 	private String contents;	
+	private Document doc; 
 	
 	
 
-	public ReadURL() {
+	public ReadURL() {		
 		contents="https://www.olx.pl/oferty/q-narty-foki/?search%5Border%5D=created_at%3Adesc";
+		try {
+			doc = Jsoup.connect(contents).get();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public String getContents() {
@@ -49,7 +56,14 @@ public class ReadURL implements Find {
 			    String header = priceAndHeader.get(0).text();
 			    int price = converPrice(priceAndHeader.get(1).text());
 			    int length = findLength(header);
-			    ans.add(new Offer(header,price, length));
+			    
+			    //link
+			    String links = offer.getElementsByAttribute("href").get(1).attr("href");
+			    //System.out.println(links);
+			    
+			    ans.add(new Offer(header,price, length,links));
+			    
+			   
 			  
 			}
 	
@@ -68,6 +82,13 @@ public class ReadURL implements Find {
 		Matcher matcher = pattern.matcher(header);
 		if (matcher.find()) {
 			ans = Integer.parseInt(matcher.group(0));
+		}
+		if(ans==0) {
+			pattern = Pattern.compile("1\\d{2}");
+			matcher = pattern.matcher(header);
+			if (matcher.find()) {
+				ans = Integer.parseInt(matcher.group(0));
+			}
 		}
 		return ans;
 	}
