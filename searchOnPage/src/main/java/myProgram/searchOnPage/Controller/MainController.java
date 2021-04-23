@@ -9,7 +9,7 @@ import myProgram.searchOnPage.Service.Find;
 import myProgram.searchOnPage.Service.ReadURL;
 
 @Controller
-@RequestMapping("test")
+@RequestMapping("/test")
 public class MainController {
 	@GetMapping
 	public String test(Model theModel) {
