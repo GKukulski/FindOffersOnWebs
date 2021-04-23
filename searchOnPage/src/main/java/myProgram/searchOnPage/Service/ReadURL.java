@@ -1,13 +1,22 @@
 package myProgram.searchOnPage.Service;
 
 import java.io.IOException;
-
+import java.util.LinkedList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+
+import myProgram.searchOnPage.entity.Offer;
+
+
+
+
 
 public class ReadURL implements Find {
 	private String contents;	
@@ -26,26 +35,25 @@ public class ReadURL implements Find {
 		this.contents = contents;
 	}
 	
-	public String read() {
-		Document doc;
-		String ans = "";
+	public List<Offer> read() {
+		List<Offer> ans = new LinkedList<Offer>();
 		try {
-			doc = Jsoup.connect(contents).get();
+			Document doc = Jsoup.connect(contents).get();
 			Elements offers = doc.getElementsByClass("offer  ");
-			StringBuilder sb = new StringBuilder();
-			for(Element offer : offers) {
-				//System.out.println("####################################################################");
-				//System.out.println(offer.toString());
-				//System.out.println("---------------------");
-				Elements tempElements = offer.getElementsByTag("h3");
-				for(Element e2: tempElements) {
-					System.out.println(e2.getElementsByTag("strong").text());
-				}
-				//System.out.println(offer.getElementsBY("strong"));
-				//System.out.println("---------------------");
+			
+			for(Element offer : offers) {				
+				//System.out.println(offer);
+				
+				//read header and price
+				Elements priceAndHeader = offer.getElementsByTag("strong");				
+			    String header = priceAndHeader.get(0).text();
+			    int price = converPrice(priceAndHeader.get(1).text());
+			    int length = findLength(header);
+			    ans.add(new Offer(header,price, length));
+			  
 			}
-			//System.out.println(doc);
-			ans = sb.toString();
+	
+			
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -53,6 +61,35 @@ public class ReadURL implements Find {
 		
 		return ans;
 		
+	}
+	private int findLength(String header) {
+		int ans=0;
+		Pattern pattern = Pattern.compile("\\d+(?= ?cm)");
+		Matcher matcher = pattern.matcher(header);
+		if (matcher.find()) {
+			ans = Integer.parseInt(matcher.group(0));
+		}
+		return ans;
+	}
+
+	//convert Price(Strong->int): OLX Standard
+	private int converPrice(String priceString) {
+		int price = 0;
+		Pattern pattern = Pattern.compile("\\d* \\d*");
+		Matcher matcher = pattern.matcher(priceString);
+		if (matcher.find()) {
+			 
+			 String priceCutString = matcher.group(0);
+			 //System.out.println(priceCutString);
+			 String[] tabStrings = priceCutString.split(" ");
+			 if(tabStrings.length == 2) {
+				 price= Integer.parseInt(tabStrings[0])*1000 + Integer.parseInt(tabStrings[1]);
+			 }
+			 else {
+				 price = Integer.parseInt(tabStrings[0]);
+			 }
+		}
+		return price;
 	}
 	
 	
