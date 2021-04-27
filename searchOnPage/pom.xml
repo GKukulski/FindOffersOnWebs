@@ -69,6 +69,15 @@
    			 <artifactId>jsoup</artifactId>
    			 <version>1.13.1</version>
 		</dependency>
+				
+		<dependency>
+    <groupId>org.seleniumhq.selenium</groupId>
+    <artifactId>selenium-server</artifactId>
+    <version>3.141.0</version>
+</dependency>
+		
+		
+		
 	</dependencies>
 
 	<build>

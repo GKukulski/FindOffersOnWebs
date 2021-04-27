@@ -1,4 +1,4 @@
-package myProgram.searchOnPage.Service;
+package myProgram.searchOnPage.service;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -12,26 +12,23 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+
 import myProgram.searchOnPage.entity.Offer;
 
 
 
 
 
-public class ReadURL implements Find {
+public class SearchOnWebOLX implements SearchOnWeb {
 	private String contents;	
 	private Document doc; 
+	private List<Offer> list;
 	
 	
 
-	public ReadURL() {		
-		contents="https://www.olx.pl/oferty/q-narty-foki/?search%5Border%5D=created_at%3Adesc";
-		try {
-			doc = Jsoup.connect(contents).get();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	
+	public SearchOnWebOLX() {					
+		readAll();
 	}
 
 	public String getContents() {
@@ -42,10 +39,28 @@ public class ReadURL implements Find {
 		this.contents = contents;
 	}
 	
-	public List<Offer> read() {
+	public List<Offer> readAll() {
 		List<Offer> ans = new LinkedList<Offer>();
+		
 		try {
-			Document doc = Jsoup.connect(contents).get();
+			contents="https://www.olx.pl/oferty/q-narty-foki/?page=1";
+			doc = Jsoup.connect(contents).get();
+			ans.addAll(read(doc,"olx"));
+			
+			contents="https://www.olx.pl/oferty/q-narty-foki/?page=2";
+			doc = Jsoup.connect(contents).get();
+			ans.addAll(read(doc,"olx"));
+					
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return ans;
+		
+	}
+
+	private List<Offer> read(Document doc, String source) {
+			List<Offer> ans = new LinkedList<Offer>();	
+			
 			Elements offers = doc.getElementsByClass("offer  ");
 			
 			for(Element offer : offers) {				
@@ -60,22 +75,32 @@ public class ReadURL implements Find {
 			    //link
 			    String links = offer.getElementsByAttribute("href").get(1).attr("href");
 			    //System.out.println(links);
-			    
-			    ans.add(new Offer(header,price, length,links));
-			    
 			   
-			  
-			}
-	
-			
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+			    //place
+			    String place = offer.getElementsByClass("breadcrumb x-normal").get(1).text();
+			    
+			    //date
+			  String date = offer.getElementsByClass("breadcrumb x-normal").get(2).text();
+			    ans.add(new Offer(header,price, length,links,place,date,source));    
+			   
+			 
+			}	
 		
 		return ans;
-		
 	}
+	
+	private List<Offer> read2(Document doc, String source) {
+		List<Offer> ans = new LinkedList<Offer>();	
+		
+			System.out.println(doc.text());
+		   
+		 
+	
+	
+	return ans;
+}
+
+	//find lenght in header
 	private int findLength(String header) {
 		int ans=0;
 		Pattern pattern = Pattern.compile("\\d+(?= ?cm)");
@@ -113,5 +138,12 @@ public class ReadURL implements Find {
 		return price;
 	}
 	
-	
+	public List<Offer> getList() {
+		return list;
+	}
+
+	public void setList(List<Offer> list) {
+		this.list = list;
+	}
+
 }
