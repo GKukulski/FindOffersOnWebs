@@ -19,3 +19,15 @@ This application is intended to meet the following requirements:
 
 
 At the beginning I want search a good offers for Ski Tour Set!!
+
+
+----------------------------
+Before use make application.properties:
+
+email.login = xxxxxxx
+
+email.password = xxxxxxx
+
+fb.login=xxxxxxx
+
+fb.password=xxxxxxx
