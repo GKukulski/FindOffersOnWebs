@@ -92,10 +92,7 @@ public class SearchOnWebOLX implements SearchOnWeb {
 	private List<Offer> read2(Document doc, String source) {
 		List<Offer> ans = new LinkedList<Offer>();	
 		
-			System.out.println(doc.text());
-		   
-		 
-	
+			System.out.println(doc.text());	
 	
 	return ans;
 }
