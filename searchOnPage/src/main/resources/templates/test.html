@@ -29,7 +29,7 @@
                     <tr th:each="offer: ${web}">
                         <td><a th:href="@{${offer.link}}"><span th:text="${offer.title}"> </span></a></td>
                          <td><span th:text="${offer.place}"> </span></td>
-                          <td><span th:text="${offer.date}"> </span></td>
+                          <td><span th:text="${#dates.format(offer.date, 'dd-MM-yyyy')}"> </span></td>
                         <td><span th:text="${offer.length}"> </span></td>
                         <td><span th:text="${offer.price}"> </span></td>
                         <td><span th:text="${offer.source}"> </span></td>

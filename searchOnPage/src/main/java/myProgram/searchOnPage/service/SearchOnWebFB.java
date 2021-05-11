@@ -2,6 +2,7 @@ package myProgram.searchOnPage.service;
 
 import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,7 @@ import java.util.regex.Pattern;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -67,17 +69,18 @@ public class SearchOnWebFB implements SearchOnWeb {
 					"https://www.facebook.com/groups/gieldasprzetuskiturowego?sorting_setting=RECENT_LISTING_ACTIVITY");
 
 			// scroll down
+			Thread.sleep(800);
 			JavascriptExecutor js = (JavascriptExecutor) driver;
-			js.executeScript("window.scrollTo(0, document.body.scrollHeight)");
+			
 			Thread.sleep(800);
-			js.executeScript("window.scrollTo(0, document.body.scrollHeight)");
+			driver.findElement(By.cssSelector("body")).sendKeys(Keys.CONTROL, Keys.END);
 			Thread.sleep(800);
-			js.executeScript("window.scrollTo(0, document.body.scrollHeight)");
+			driver.findElement(By.cssSelector("body")).sendKeys(Keys.CONTROL, Keys.END);
 			Thread.sleep(800);
-			js.executeScript("window.scrollTo(0, document.body.scrollHeight)");
+			driver.findElement(By.cssSelector("body")).sendKeys(Keys.CONTROL, Keys.END);
 			Thread.sleep(800);
-			js.executeScript("window.scrollTo(0, document.body.scrollHeight)");
-			Thread.sleep(800);
+			driver.findElement(By.cssSelector("body")).sendKeys(Keys.CONTROL, Keys.END);
+			Thread.sleep(1800);
 			// wrtie to file / String;
 			FileWriter fWriter = new FileWriter("cos.txt");
 			text = driver.getPageSource();
@@ -92,7 +95,7 @@ public class SearchOnWebFB implements SearchOnWeb {
 
 	}
 
-	public void find() {
+	public void findAd() {
 		// String patternAddString =
 		// "<strong><span>(.*?)</span></strong>.*?(\\d+)&nbsp";
 		String patternAddString = "<strong><span>(.*?)</span></strong>.*?(\\d+)&nbsp(.*?)-webkit-box;\\\"><div>(.*?)</div>";
@@ -105,16 +108,18 @@ public class SearchOnWebFB implements SearchOnWeb {
 
 			String seller = matcherAd.group(1);
 			String price = matcherAd.group(2);
-			String date = findDate(ad);
+			String dateDate = findDate(ad);
+			Date date = new Date();
 			String opis = findDescription(ad);
 			String header = findMainDesc(ad);
+			String place = findPlace(ad);
 			System.out.println(seller);
 			System.out.println(opis);
 			System.out.println(date);
 			System.out.println(header);
 			System.out.println(price + "zł");
 			System.out.println();
-			list.add(new Offer(header, Integer.parseInt(price), 0, "", seller, date, "FB"));
+			list.add(new Offer(header, Integer.parseInt(price), 0, "https://www.facebook.com/groups/gieldasprzetuskiturowego?sorting_setting=RECENT_LISTING_ACTIVITY", place, date, "FB"));
 		}
 	}
 
@@ -138,6 +143,16 @@ public class SearchOnWebFB implements SearchOnWeb {
 		}
 		return opis;
 	}
+	
+	public String findPlace(String ad) {
+		String patternString = "(\\d+)&nbsp(.*?)</span><span aria-hidden=\"true\"> · </span></span>(.*?)</div>";
+		Pattern pattern = Pattern.compile(patternString);
+		Matcher matcher = pattern.matcher(ad);
+		if (matcher.find()) {
+			return matcher.group(3);
+		}
+		return "";
+	}
 
 	public String findMainDesc(String ad) {
 
@@ -153,7 +168,7 @@ public class SearchOnWebFB implements SearchOnWeb {
 	@Override
 	public List<Offer> readAll() {
 		writeToFile();
-		find();
+		findAd();
 		return list;
 	}
 

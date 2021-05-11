@@ -1,12 +1,14 @@
 package myProgram.searchOnPage.entity;
 
+import java.util.Date;
+
 public class Offer {
 	private String title;
 	private int price;
 	private int length;
 	private String link;
 	private String place;
-	private String date;
+	private Date date;
 	private String source;
 	
 	
@@ -18,7 +20,7 @@ public class Offer {
 	}
 	
 	
-	public Offer(String title, int price, int length, String link, String place, String date, String source) {
+	public Offer(String title, int price, int length, String link, String place, Date date, String source) {
 		this.title = title;
 		this.price = price;
 		this.length = length;
@@ -54,11 +56,11 @@ public class Offer {
 		this.place = place;
 	}
 
-	public String getDate() {
+	public Date getDate() {
 		return date;
 	}
 
-	public void setDate(String date) {
+	public void setDate(Date date) {
 		this.date = date;
 	}
 

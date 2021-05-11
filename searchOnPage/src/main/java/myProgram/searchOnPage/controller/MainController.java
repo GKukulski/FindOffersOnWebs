@@ -50,6 +50,19 @@ public class MainController {
 		return "test";
 	}
 	
+	@GetMapping("/test")
+	public String test(Model theModel) {
+		SearchOnWeb olx = new SearchOnWebOLX();
+		List<Offer> lista = olx.readAll();
+		
+		SearchOnWeb fb = new SearchOnWebFB(loginFB,passwordFB);
+		lista.addAll(fb.readAll());
+		
+		//lista.sort((Offer o1, Offer o2) -> o2.getLength()-o1.getLength());
+		theModel.addAttribute("web",lista);
+		return "test";
+	}
+	
 	@GetMapping("/testEmail")
 	public String testEmail(Model theModel) {
 		new SendMail(loginEmail,passwordEmail).send();
